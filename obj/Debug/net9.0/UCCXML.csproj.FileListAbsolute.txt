@@ -86,3 +86,4 @@ C:\Users\jarek\Documents\GitHub\beau-work\UCCXML\obj\Debug\net9.0\refint\UCCXML.
 C:\Users\jarek\Documents\GitHub\beau-work\UCCXML\obj\Debug\net9.0\UCCXML.pdb
 C:\Users\jarek\Documents\GitHub\beau-work\UCCXML\obj\Debug\net9.0\UCCXML.genruntimeconfig.cache
 C:\Users\jarek\Documents\GitHub\beau-work\UCCXML\obj\Debug\net9.0\ref\UCCXML.dll
+C:\Users\jarek\Documents\GitHub\beau-work\UCCXML\obj\Debug\net9.0\UCCXML.sourcelink.json

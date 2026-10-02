@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UCCXML")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1f6705380c1de7c2934898f6b997dda8125af054")]
 [assembly: System.Reflection.AssemblyProductAttribute("UCCXML")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UCCXML")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -39,83 +39,83 @@ static List<Debtor> ReadDebtors(string pathToFile)
     foreach(var item in items)
     {
         var debtor = item.Value;
-        if (debtor is not null && debtor.FirstName is not null) debtors.Add(debtor);
+        if (debtor is not null && debtor.DealName is not null) debtors.Add(debtor);
     }
     return debtors;
 }
 
-void DoConsoleLoop(List<Debtor> debtors, DocumentInformation docInfo, string documentId)
-{
-    bool runLoop = true;
-    while (runLoop)
-    {
-        Console.Write("(? for help) > ");
-        string? input = Console.ReadLine();
-        string response;
-        switch (input)
-        {
-            case "1": // Submit data to be processed
-                List<string> responses = [];
-                foreach (Debtor debtor in debtors)
-                {
-                    var (Response, ReceiptId) = calicoApi.SubmitFilings(debtor.AsSubmissionXElement(docInfo).ToString());
-                    responses.Add(Response.ToString());
-                    if (Response.Code == HttpStatusCode.Accepted)
-                    {
-                        File.AppendAllText("Output/ReceiptIds.txt",
-                            SpaceRegex().Replace($"{debtor.FirstName}-{debtor.LastName}-{debtor.StAddress}", "-")
-                            + "," + (ReceiptId ?? "No receipt") + "\n");
-                    }
-                    else break;
-                }
-                response = string.Join("\n---\n", responses);
-                break;
-            case "2": // Check status of last submission
-                response = calicoApi.GetFileStatus(documentId).ToString();
-                break;
-            case "3": // Check current balance
-                response = calicoApi.GetBalance().ToString();
-                break;
-            case "4": // Check server status
-                response = calicoApi.GetServerStatus().ToString();
-                break;
-            case "5": // Get document from last submission
-                response = calicoApi.GetDocument(documentId, "test").ToString();
-                break;
-            case "6": // Preview XML documents
-                Directory.CreateDirectory("Output/PreviewXML");
-                foreach (Debtor debtor in debtors) 
-                {
-                    File.WriteAllText(SpaceRegex().Replace($"Output/PreviewXML/{debtor.FirstName}-{debtor.LastName}-{debtor.StAddress}.xml", "-"),
-                        debtor.AsSubmissionXElement(docInfo).ToString()
-                        );
-                }
-                response = "Done.";
-                break;
-            case "?": // Print help
-                response = @"1. Submit data to be processed
-2. Check status of last submission
-3. Check current balance.
-4. Check server status.
-5. Get document from last submission.
-6. Generate XML previews.
-q. Quit
-        ";
-                break;
-            case "q": // Quit
-                runLoop = false;
-                response = "Quitting...";
-                break;
-            default:  // Unrecognized
-                response = "Invalid input. Enter '?' for options.";
-                break;
-        }
-        //Console.Clear();
-        Console.WriteLine(response);
-    }
-}
+//void DoConsoleLoop(List<Debtor> debtors, DocumentInformation docInfo, string documentId)
+//{
+//    bool runLoop = true;
+//    while (runLoop)
+//    {
+//        Console.Write("(? for help) > ");
+//        string? input = Console.ReadLine();
+//        string response;
+//        switch (input)
+//        {
+//            case "1": // Submit data to be processed
+//                List<string> responses = [];
+//                foreach (Debtor debtor in debtors)
+//                {
+//                    var (Response, ReceiptId) = calicoApi.SubmitFilings(debtor.AsSubmissionXElement(docInfo).ToString());
+//                    responses.Add(Response.ToString());
+//                    if (Response.Code == HttpStatusCode.Accepted)
+//                    {
+//                        File.AppendAllText("Output/ReceiptIds.txt",
+//                            SpaceRegex().Replace($"{debtor.FirstName}-{debtor.LastName}-{debtor.StAddress}", "-")
+//                            + "," + (ReceiptId ?? "No receipt") + "\n");
+//                    }
+//                    else break;
+//                }
+//                response = string.Join("\n---\n", responses);
+//                break;
+//            case "2": // Check status of last submission
+//                response = calicoApi.GetFileStatus(documentId).ToString();
+//                break;
+//            case "3": // Check current balance
+//                response = calicoApi.GetBalance().ToString();
+//                break;
+//            case "4": // Check server status
+//                response = calicoApi.GetServerStatus().ToString();
+//                break;
+//            case "5": // Get document from last submission
+//                response = calicoApi.GetDocument(documentId, "test").ToString();
+//                break;
+//            case "6": // Preview XML documents
+//                Directory.CreateDirectory("Output/PreviewXML");
+//                foreach (Debtor debtor in debtors) 
+//                {
+//                    File.WriteAllText(SpaceRegex().Replace($"Output/PreviewXML/{debtor.FirstName}-{debtor.LastName}-{debtor.StAddress}.xml", "-"),
+//                        debtor.AsSubmissionXElement(docInfo).ToString()
+//                        );
+//                }
+//                response = "Done.";
+//                break;
+//            case "?": // Print help
+//                response = @"1. Submit data to be processed
+//2. Check status of last submission
+//3. Check current balance.
+//4. Check server status.
+//5. Get document from last submission.
+//6. Generate XML previews.
+//q. Quit
+//        ";
+//                break;
+//            case "q": // Quit
+//                runLoop = false;
+//                response = "Quitting...";
+//                break;
+//            default:  // Unrecognized
+//                response = "Invalid input. Enter '?' for options.";
+//                break;
+//        }
+//        //Console.Clear();
+//        Console.WriteLine(response);
+//    }
+//}
 
-var debtors = ReadDebtors(@"C:\Users\jarek\Downloads\cleaned.xlsx");
+var debtors = ReadDebtors(@"C:\Users\jarek\Downloads\California Bulk By Month.xlsx");
 
 UCCXML.Document document = new();
 document.AddDebtor([.. debtors]);
@@ -141,10 +141,16 @@ Console.WriteLine($"""
     """);
 
 // Post XML to URL
-string docId = "805062f7-3e7c-4ad7-804e-8ba958d9a10c";
+string docId = "78dda428-2945-4ec7-bd40-b03a563e30c0";
 
 // CLI Loop
-DoConsoleLoop(debtors, docInfo, docId);
+// DoConsoleLoop(debtors, docInfo, docId);
+
+// DEBUG: Print each XML
+foreach(var debtor in debtors)
+{
+    Console.WriteLine(debtor.AsSubmissionXElement(docInfo).ToString());
+}
 
 // Retrieve status
 partial class Program
