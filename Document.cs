@@ -14,84 +14,55 @@ namespace UCCXML;
 
 public class Document
 {
-    readonly List<Debtor> _debtors = [];
     public Document() { }
 
-    public XElement Make(DocumentInformation documentInformation)
+    static internal XElement Make(Details details, Debtor debtor)
     {
         string transType = "Initial";
+        string collateralText = details.CollateralText[debtor.DealType];
         string collateralDesignationType = "NODesignation"; // NODesignation, Trust, or PersonalRepresentative
 
         return new XElement("Document",
             new XElement("XMLVersion",
-                new XAttribute("Version", documentInformation.Version)
+                new XAttribute("Version", details.VersionNumber)
             ),
             new XElement("Header",
                 new XElement("Filer", 
-                    MakeNames(documentInformation.Filer), 
-                    new XElement("ClientAccountNum", documentInformation.AccountNumber),
-                    new XElement("ContactName", documentInformation.ContactName),
-                    new XElement("ContactEmail", documentInformation.ContactEmail),
-                    new XElement("ContactPhone", documentInformation.ContactPhone)
+                    MakeOrganizationNames(details.Filer), 
+                    new XElement("ClientAccountNum", details.AccountNumber),
+                    new XElement("ContactName", details.ContactInfo.Name),
+                    new XElement("ContactEmail", details.ContactInfo.Email),
+                    new XElement("ContactPhone", details.ContactInfo.PhoneNumber)
                 )
             ),
             new XElement("Record",
                 new XElement("TransType", new XAttribute("Type", transType)),
-                new XElement("Debtors", _debtors.Select(d => new XElement("DebtorName", d.AsXElement()))),
+                new XElement("Debtors", new XElement("DebtorName", debtor.AsXElement())),
                 new XElement("SecuredParties",
-                    new XElement("SecuredName", MakeNames(documentInformation.SecuredParty))
+                    new XElement("SecuredName", MakeOrganizationNames(
+                        GetSecuredParty(debtor, details)
+                        ))
                 ),
-                new XElement("Collateral", new XElement("ColText", documentInformation.CollateralText)),
+                new XElement("Collateral", new XElement("ColText", collateralText)),
                 new XElement("CollateralDesignation", new XAttribute("Type", collateralDesignationType))
             )
         );
     }
 
-    public void AddDebtor(params Debtor[] debtors)
-    {
-        _debtors.AddRange(debtors);
-    }
-
-    static XElement MakeNames(Names names) {
+    static XElement MakeOrganizationNames(OrganizationNames organization) {
         return new XElement("Names",
-                names.NameElement,
-                new XElement("MailAddress", names.MailAddress),
-                new XElement("City", names.City),
-                new XElement("State", names.State),
-                new XElement("PostalCode", names.PostalCode),
+                new XElement("OrganizationName", organization.OrganizationName),
+                new XElement("MailAddress", organization.StAddress),
+                new XElement("City", organization.City),
+                new XElement("State", organization.State),
+                new XElement("PostalCode", organization.ZipCode),
                 new XElement("Country", "USA")
         );
     }
+
+    static OrganizationNames GetSecuredParty(Debtor debtor, Details details)
+    {
+        return new(debtor.Tranche, details.Filer.StAddress, details.Filer.City, details.Filer.State, details.Filer.ZipCode);
+    }
 }
 
-/// <summary>
-/// An object that represents the name and details of an individual or organization.
-/// </summary>
-/// <param name="nameElement">An XElement "OrganizationName" with the name of an organization, or an XElement "IndividualName"
-/// with child XElements for "Surname" and "FirstPersonalName"</param>
-/// <param name="mailAddress">Mailing Address of the designated party.</param>
-/// <param name="city">City of the designated party.</param>
-/// <param name="state">2 character US postal identification code.<br/><b>Values:</b><br/>See Appendix A – State Codes.</param>
-/// <param name="postalCode">The postal code for the party.</param>
-public class Names(XElement nameElement, string mailAddress, string city, string state, string postalCode)
-{
-    public XElement NameElement = nameElement;
-    public string MailAddress = mailAddress;
-    public string City = city;
-    public string State = state;
-    public string PostalCode = postalCode;
-    public string Country = "USA";
-}
-
-public class DocumentInformation(string version, string accountNumber, string contactName, string contactEmail,
-        string contactPhone, Names filer, Names securedParty, string collateralText)
-{
-    public readonly string Version = version;
-    public readonly string AccountNumber = accountNumber;
-    public readonly string ContactName = contactName;
-    public readonly string ContactEmail = contactEmail;
-    public readonly string ContactPhone = contactPhone;
-    public readonly Names Filer = filer;
-    public readonly Names SecuredParty = securedParty;
-    public readonly string CollateralText = collateralText;
-}

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "UCCXML": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\jarek\\Downloads\\Export CA Bulk UCC (1).xlsx\""
+    }
+  }
+}

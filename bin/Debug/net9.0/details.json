@@ -1,0 +1,23 @@
+{
+  "ContactInfo": {
+    "PhoneNumber": "8008365954",
+    "Name": "Beau Smith",
+    "Email":  "beau@maxwellpower.com"
+  },
+  "AccountNumber": "00764",
+  "VersionNumber": "06232003",
+  "Filer": {
+
+    "OrganizationName": "HDM Capital, LLC",
+    "StAddress": "42 Exchange Place",
+    "City": "Salt Lake City",
+    "State": "UT",
+    "ZipCode": "84111"
+  },
+  "CollateralText": {
+    "Residential Solar": "The solar system and all related equipment, fixtures, components, and improvements, whether now installed or to be installed, uniquely located at the real property address for the debtor in this filing, together with all replacements, substitutions, additions, accessions, and proceeds thereof.",
+    "Residential Storage": "The energy storage system and all related equipment, fixtures, components, and improvements, whether now installed or to be installed, uniquely located at the real property address for the debtor in this filing, together with all replacements, substitutions, additions, accessions, and proceeds thereof.",
+    "Residential Solar with Storage": "The solar and energy storage system and all related equipment, fixtures, components, and improvements, whether now installed or to be installed, uniquely located at the real property address for the debtor in this filing, together with all replacements, substitutions, additions, accessions, and proceeds thereof.",
+	"Commercial Solar": "The solar system and all related equipment, fixtures, components, and improvements, whether now installed or to be installed, uniquely located at the real property address for the debtor in this filing, together with all replacements, substitutions, additions, accessions, and proceeds thereof."
+  }
+}
