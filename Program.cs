@@ -14,7 +14,6 @@ using LogicExtensions;
 using System.Runtime.InteropServices;
 using System.Text;
 
-var xmlData = File.ReadAllText("C:/Users/jarek/Downloads/sample.xml");
 string detailsPath = Path.GetDirectoryName(Environment.ProcessPath) ?? throw new Exception("No details.json file found.");
 Details details = Details.BuildDetails(Path.Combine(detailsPath, "details.json"));
 bool verboseMode = details.Verbose ?? false;

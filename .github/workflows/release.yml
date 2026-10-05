@@ -1,0 +1,39 @@
+name: Release
+
+on:
+    push:
+            tags:
+                    - 'v*'
+                 
+permissions:
+    contents: write
+    
+jobs:
+    publish:
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v4
+            
+            - uses: actions/setup-dotnet@v4
+              with:
+                dotnet-version: '9.0.x'
+                
+            - name: Publish win-x64
+              run: dotnet publich -c Release -r win-x64 -o publish/win-x64
+            
+            - name: Publish osx-arm64
+              run: dotnet publish -c Release -r osx-arm64 -o publish/osx-arm64
+            
+            - name: Publish osx-x64
+              run: dotnet publish -c Release -r osx-x64 -o publish/osx-x64
+            
+            - name: Package
+              run: |
+                (cd publich/win-x64 && zip -q ../../UCCXML-win-x64.zip UCCXML.exe)
+                tar -czf UCCXML-osx-arm64.tar.gz -C publish/osx-arm64 UCCXML
+                tar -czf UCCXML-osx-x64.tar.gz -C publish/osx-x64 UCCXML
+            
+            - name: Attach to release
+              env:
+                GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: gh release create "${{ github.ref_name }}" UCCXML-osx-*.tar.gz --title "${{ github.ref_name }}" --generate-notes
