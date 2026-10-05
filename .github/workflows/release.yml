@@ -29,9 +29,9 @@ jobs:
             
             - name: Ad-hoc sign macOS binaries
               run: |
-                codesign --force --sign - publish/osx-arm64/app
-                codesign --force --sign - publish/osx-x64/app
-                codesign --verify --verbose publish/osx-arm64/app
+                codesign --force --sign - publish/osx-arm64/UCCXML
+                codesign --force --sign - publish/osx-x64/UCCXML
+                codesign --verify --verbose publish/osx-arm64/UCCXML
                 
             - name: Package
               run: |
