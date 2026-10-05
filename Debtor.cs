@@ -91,6 +91,12 @@ public partial class Debtor
 		Console.WriteLine($"Document not ready: {result.Code}");
 		return null;
 	}
+	public class Receipt(string dealName, string receiptId)
+	{
+		public string DealName { get; set; } = dealName;
+		public string ReceiptId { get; set; } = receiptId;
+		public string FileName { get; set; } = invalidCharsExp().Replace(dealName, "-");
+	}
 
     [GeneratedRegex(@"[ <>:""/\\|?*]")]
     private static partial Regex invalidCharsExp();

@@ -9,6 +9,9 @@ namespace UCCXML;
 
 public class Details
 {
+    public bool? Verbose { get; set; }
+    public int? WaitTimeSeconds { get; set; }
+    public string? OutputPath { get; set; }
     public ContactInfo ContactInfo;
     public OrganizationNames Filer;
     public required string AccountNumber { get; set; }
@@ -31,6 +34,25 @@ public class Details
         string? SosKey = Environment.GetEnvironmentVariable("CALICO_SOS_KEY");
         if (ApiKey is null || SosKey is null) throw new Exception("Environment variables 'CALICO_API_KEY' and 'CALICO_SOS_KEY' must be set.");
         return (ApiKey, SosKey);
+    }
+
+    public async Task WaitAndDisplayTimeRemainingAsync()
+    {
+        int seconds = WaitTimeSeconds ?? 3600; // Wait 1 hour by default;
+        Console.WriteLine($"WaitTimeSeconds is null {WaitTimeSeconds is null}");
+        var duration = TimeSpan.FromSeconds(seconds);
+        var endTime = DateTime.UtcNow + duration;
+        var endTimeLocal = DateTime.Now + duration;
+        using var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+
+        while (true)
+        {
+            var remaining = endTime - DateTime.UtcNow;
+            if (remaining <= TimeSpan.Zero) break;
+            Console.Write($"\rDocuments will be ready at {endTimeLocal:hh\\:mm\\:ss} - Time remaining: {remaining:hh\\:mm\\:ss}  ");
+            await timer.WaitForNextTickAsync();
+        }
+        Console.WriteLine("");
     }
 }
 
