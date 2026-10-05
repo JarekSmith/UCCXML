@@ -29,7 +29,7 @@ jobs:
             
             - name: Package
               run: |
-                (cd publich/win-x64 && zip -q ../../UCCXML-win-x64.zip UCCXML.exe)
+                (cd publish/win-x64 && zip -q ../../UCCXML-win-x64.zip UCCXML.exe)
                 tar -czf UCCXML-osx-arm64.tar.gz -C publish/osx-arm64 UCCXML
                 tar -czf UCCXML-osx-x64.tar.gz -C publish/osx-x64 UCCXML
             
