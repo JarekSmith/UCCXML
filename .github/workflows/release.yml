@@ -27,6 +27,12 @@ jobs:
             - name: Publish osx-x64
               run: dotnet publish -c Release -r osx-x64 -o publish/osx-x64
             
+            - name: Ad-hoc sign macOS binaries
+              run: |
+                codesign --force --sign - publish/osx-arm64/app
+                codesign --force --sign - publish/osx-x64/app
+                codesign --verify --verbose publish/osx-arm64/app
+                
             - name: Package
               run: |
                 (cd publish/win-x64 && zip -q ../../UCCXML-win-x64.zip UCCXML.exe)
@@ -36,4 +42,4 @@ jobs:
             - name: Attach to release
               env:
                 GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: gh release create "${{ github.ref_name }}" UCCXML-osx-*.tar.gz --title "${{ github.ref_name }}" --generate-notes
+              run: gh release create "${{ github.ref_name }}" UCCXML-win-x64.zip UCCXML-osx-*.tar.gz --title "${{ github.ref_name }}" --generate-notes
